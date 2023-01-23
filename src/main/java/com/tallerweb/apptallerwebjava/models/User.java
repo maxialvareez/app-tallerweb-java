@@ -1,6 +1,9 @@
 package com.tallerweb.apptallerwebjava.models;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,11 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Document("users")
 public class User {
@@ -23,7 +24,6 @@ public class User {
     private String correo;
     private String password;
     private boolean estado;
-    private GroupUser pertenece_a;
 
     public User(String nombre, String correo, String password){
         this.nombre = nombre;
@@ -32,5 +32,7 @@ public class User {
         this.estado = true;
     }
 
-
+    public User(){
+        this.estado = true;
+    }
 }

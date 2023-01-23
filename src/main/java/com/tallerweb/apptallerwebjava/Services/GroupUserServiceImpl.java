@@ -1,18 +1,18 @@
 package com.tallerweb.apptallerwebjava.Services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.tallerweb.apptallerwebjava.DAO.GroupUserRepository;
 import com.tallerweb.apptallerwebjava.DAO.UserRepository;
 import com.tallerweb.apptallerwebjava.Util.dto.GroupDTO;
-import com.tallerweb.apptallerwebjava.Util.dto.LoginResponseDTO;
 import com.tallerweb.apptallerwebjava.models.GroupUser;
 import com.tallerweb.apptallerwebjava.models.User;
 
@@ -23,6 +23,9 @@ public class GroupUserServiceImpl {
 
     @Autowired
     private SecurityServiceImpl securityService;
+
+    @Autowired
+    private UserServiceImpl userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -49,6 +52,7 @@ public class GroupUserServiceImpl {
 
             GroupUser groupUser = new GroupUser(groupDTO.getNombre(), groupDTO.getDescripcion(), optUser.get());
             groupUserRepository.save(groupUser);
+
             return convertToDto(groupUser);
 
         } catch (Exception e) {
@@ -56,6 +60,32 @@ public class GroupUserServiceImpl {
             throw e;
         }
 
+    }
+
+    public List<GroupDTO> getGruposUsuario(String token){
+        try {
+            
+            List<GroupUser> lista = new ArrayList<>();
+            List<GroupDTO> listaDTO = new ArrayList<>();
+            String id = securityService.parseJWT(token);
+            Optional<User> optUser = userRepository.findById(id);
+            if(optUser.isPresent()){
+                User user = optUser.get();
+                String correo = user.getCorreo();
+                lista = groupUserRepository.findByIntegrantesCorreo(correo);
+                for(GroupUser group: lista){
+                    listaDTO.add(convertToDto(group));
+                }
+                return listaDTO;
+            }
+            
+            return null;
+
+        } catch(Exception e){
+            logger.error(e.getMessage());
+        }
+        
+        return null;
     }
 
     private GroupDTO convertToDto(GroupUser groupUser) {

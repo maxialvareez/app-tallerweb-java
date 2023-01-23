@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tallerweb.apptallerwebjava.Services.SecurityServiceImpl;
 import com.tallerweb.apptallerwebjava.Services.UserServiceImpl;
+import com.tallerweb.apptallerwebjava.Util.dto.GroupDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginResponseDTO;
 import com.tallerweb.apptallerwebjava.Util.rest.WrapperResponse;
@@ -107,25 +108,5 @@ public class UserRest {
             return ResponseEntity.ok((new WrapperResponse<String>(false, e.getMessage())));
         }
     }
-
-    // Traer todos los grupos a los que pertenece ese usuario.
-    @GetMapping(path="/grupo/{id}")
-	public ResponseEntity<WrapperResponse<?>> getGruposUsuario(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
-		try {
-            logger.info("UserRest.getGruposUsuario");
-
-            if(!securityService.authenticateUser(token, id)){
-                throw new Exception("No tiene autorizacion.");
-            }
-
-			List<LoginResponseDTO> response = userService.getAll();
-
-			return ResponseEntity.ok(new WrapperResponse(true, "", response));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse(false, e.getMessage())));
-		}
-	}
-
-
     
 }

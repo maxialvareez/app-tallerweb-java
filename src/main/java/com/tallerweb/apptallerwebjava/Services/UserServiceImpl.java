@@ -9,11 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.tallerweb.apptallerwebjava.DAO.UserRepository;
+import com.tallerweb.apptallerwebjava.Util.dto.GroupDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginResponseDTO;
+import com.tallerweb.apptallerwebjava.models.GroupUser;
 import com.tallerweb.apptallerwebjava.models.User;
 
 @Service
@@ -45,12 +48,10 @@ public class UserServiceImpl {
         
         User usuario = new User();
         String password = securityService.encoder().encode(user.getPassword());
-        LoginResponseDTO response = new LoginResponseDTO();
 
         try { 
             usuario.setCorreo(user.getCorreo());
             usuario.setNombre(user.getNombre());
-            usuario.setEstado(true);
             usuario.setPassword(password);
     
             userRepository.save(usuario);
