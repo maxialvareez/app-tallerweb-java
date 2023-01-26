@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class GroupUser {
 
     @Id
-    private ObjectId _id;
+    private ObjectId id;
     private String nombre;
     private String descripcion;
     private boolean estado;
@@ -38,6 +38,16 @@ public class GroupUser {
         this.integrantes = new ArrayList<>();
         this.integrantes.add(creadoPor);
         this.items = new ArrayList<>();
+    }
+
+    public void addIntegrante(User user){
+        this.integrantes.add(user);        
+    }
+
+    public void deleteIntegrante(User user){
+        if(this.integrantes.contains(user)){
+            this.integrantes.remove(user);
+        }       
     }
     
 }

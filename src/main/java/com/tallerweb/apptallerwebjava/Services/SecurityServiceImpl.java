@@ -12,9 +12,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.tallerweb.apptallerwebjava.DAO.GroupUserRepository;
 import com.tallerweb.apptallerwebjava.DAO.UserRepository;
+import com.tallerweb.apptallerwebjava.Util.dto.GroupDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginResponseDTO;
+import com.tallerweb.apptallerwebjava.models.GroupUser;
+import com.tallerweb.apptallerwebjava.models.Item;
 import com.tallerweb.apptallerwebjava.models.User;
 
 import io.jsonwebtoken.Claims;
@@ -32,6 +36,18 @@ public class SecurityServiceImpl {
 	
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private UserServiceImpl userService;
+
+	@Autowired
+	private ItemServiceImpl itemService;
+
+	@Autowired
+	private GroupUserRepository groupUserRepository;
+
+	@Autowired
+	private GroupUserServiceImpl groupUserService;
 
 	@Bean
 	public PasswordEncoder encoder() {
@@ -179,25 +195,51 @@ public class SecurityServiceImpl {
 
     }
 
-	/*
-	public boolean perteneceGrupo(String token) {
+	public boolean perteneceGrupo(String token, String idGrupo) {
 
         try {
-            String uid = parseJWT(token);
-
-            Optional<User> user = userRepository.findById(id);
-            if(user.isPresent()){
-                if(user.get().getId().toHexString().equals(uid)){
-                    return true;
-                }
+            User user = userService.getUser(token);
+			GroupUser group = groupUserService.getGroup(idGrupo);
+            if(group.getIntegrantes().contains(user)){
+                return true;
             }
-
-        } catch(Exception e){
+        } catch(Exception e) {
             logger.error(e.getMessage());
         }
 
         return false;
-
+		
     }
-    */
+
+	public boolean perteneceItem(String token, String idItem) {
+
+        try {
+            User user = userService.getUser(token);
+			Item item = itemService.getItem(idItem);
+            if(item.getCreadoPor().equals(user)){
+                return true;
+            }
+        } catch(Exception e) {
+            logger.error(e.getMessage());
+        }
+
+        return false;
+		
+    }
+
+	public boolean adminGrupo(String token, String idGrupo) {
+
+        try {
+            User user = userService.getUser(token);
+			GroupUser group = groupUserService.getGroup(idGrupo);
+            if(group.getCreadoPor().equals(user)){
+                return true;
+            }
+        } catch(Exception e) {
+            logger.error(e.getMessage());
+        }
+
+        return false;
+		
+    }
 }

@@ -65,30 +65,27 @@ public class UserServiceImpl {
 
     }
 
-    public LoginResponseDTO editUsuario(String id, LoginDTO userDTO) throws Exception {
+    public LoginResponseDTO editUsuario(String token, LoginDTO userDTO) throws Exception {
     
         LoginResponseDTO response = new LoginResponseDTO();
 
         try {
-            Optional<User> optUser = userRepository.findById(id);
-            if(optUser.isPresent()){
-                User user = optUser.get();
+            User user = getUser(token);
 
-                if(userDTO.getNombre() != null){
-                    user.setNombre(userDTO.getNombre());
-                }
-
-                if(userDTO.getPassword() != null){
-                    String password = securityService.encoder().encode(userDTO.getPassword());
-                    user.setPassword(password);
-                }
-
-                userRepository.save(user);
-
-                response = convertToDto(user); 
+            if(userDTO.getNombre() != null){
+                user.setNombre(userDTO.getNombre());
             }
 
-            return response;
+            if(userDTO.getPassword() != null){
+                String password = securityService.encoder().encode(userDTO.getPassword());
+                user.setPassword(password);
+            }
+
+            userRepository.save(user);
+
+            response = convertToDto(user); 
+
+            return response;            
 
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -97,20 +94,35 @@ public class UserServiceImpl {
 
     }
 
-    public void deleteUsuario(String id) throws Exception {
+    public void deleteUsuario(String token) throws Exception {
 
         try {
-            Optional<User> optUser = userRepository.findById(id);
-            
-            if(optUser.isPresent()){
-                User user = optUser.get();
-                user.setEstado(false);
-                userRepository.save(user);
-            }
+            User user = getUser(token);
+            user.setEstado(false);
+            userRepository.save(user);
 
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new Exception("No se pudo guardar en base de datos el eliminado del usuario");
+        }
+
+    }
+
+    public User getUser(String token){
+    
+        try {
+            String id = securityService.parseJWT(token);
+            Optional<User> optUser = userRepository.findById(id);
+            
+            if(optUser.isPresent()){
+                User user = optUser.get();
+                return user;
+            }
+
+            return null;
+
+        } catch(Exception e) {
+            return null;
         }
 
     }

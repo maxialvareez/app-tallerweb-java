@@ -1,18 +1,27 @@
 package com.tallerweb.apptallerwebjava.Controllers;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tallerweb.apptallerwebjava.DAO.ItemRepository;
+import com.tallerweb.apptallerwebjava.Services.ItemServiceImpl;
 import com.tallerweb.apptallerwebjava.Services.SecurityServiceImpl;
 import com.tallerweb.apptallerwebjava.Services.UserServiceImpl;
 import com.tallerweb.apptallerwebjava.Util.dto.ItemDTO;
+import com.tallerweb.apptallerwebjava.Util.dto.LoginDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginResponseDTO;
 import com.tallerweb.apptallerwebjava.Util.rest.WrapperResponse;
 
@@ -28,33 +37,120 @@ public class ItemRest {
     @Autowired
     private SecurityServiceImpl securityService;
 
-/* 
-     // Registrar Item
-     @PostMapping(path="/")
-     public ResponseEntity<WrapperResponse<LoginResponseDTO>> registrarItem(@RequestBody ItemDTO itemDTO, @RequestHeader("Authorization") String token) {
-         try {
-             
-            ItemDTO response = new ItemDTO();
-            logger.info("ItemRest.registrarItem");
- 
-            //Validar que el grupo exista y crearlo ahí adentro.
+    @Autowired
+    private ItemServiceImpl itemService;
 
-            boolean valido = userService.validarUsuario(loginDTO);
- 
-             if(!valido){
-                 throw new Exception("El correo ya se encuentra en uso.");
-             }
- 
-             userService.registrarUsuario(loginDTO);
-             response.setNombre(loginDTO.getNombre());
-             response.setCorreo(loginDTO.getCorreo());
- 
-             return ResponseEntity.ok(new WrapperResponse(true, "", response));
-         } catch (Exception e) {
-             return ResponseEntity.ok(new WrapperResponse(false, e.getMessage()));
-         }
-     }
 
-     */
+    // Registrar Item.
+    @PostMapping(path="/{id}")
+    public ResponseEntity<WrapperResponse<?>> registrarItem(@PathVariable("id") String id, @RequestBody ItemDTO itemDTO, @RequestHeader("Authorization") String token) {
+        try {
+
+        logger.info("ItemRest.registrarItem");
+
+        if(!securityService.isLogged(token)){
+            throw new Exception("No se encuentra logueado, token invalido.");
+        }
+
+        if(!securityService.perteneceGrupo(token, id)){
+            throw new Exception("No se encuentra logueado, token invalido.");
+        }
+
+        ItemDTO response = itemService.addItem(itemDTO, token);
+
+        return ResponseEntity.ok(new WrapperResponse(true, "", response));
+        
+        } catch (Exception e) {
+            return ResponseEntity.ok(new WrapperResponse(false, e.getMessage()));
+        }
+
+    }
+
+    // Traer todos los items de un grupo.
+    @GetMapping(path="/{id}")
+	public ResponseEntity<WrapperResponse<List<ItemDTO>>> getItems(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
+		try {
+            logger.info("ItemRest.getItems");
+
+            if(!securityService.isLogged(token)){
+                throw new Exception("No se encuentra logueado, token invalido.");
+            }
+    
+            if(!securityService.perteneceGrupo(token, id)){
+                throw new Exception("No puede ver los items de ese grupo porque no pertenece a el.");
+            }
+
+            List<ItemDTO> response = itemService.getAll();
+
+			return ResponseEntity.ok(new WrapperResponse<List<ItemDTO>>(true, "", response));
+
+		} catch (Exception e) {
+			return ResponseEntity.ok((new WrapperResponse<List<ItemDTO>>(false, e.getMessage())));
+		}
+	}
+
+    // Traer un item en particular.
+    @GetMapping(path="/{id}")
+    public ResponseEntity<WrapperResponse<ItemDTO>> getItem(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
+        try {
+            logger.info("ItemRest.getItem");
+
+            if(!securityService.isLogged(token)){
+                throw new Exception("No se encuentra logueado, token invalido.");
+            }
+
+            // Validacion de grupo.
+
+            ItemDTO response = itemService.traerItem(id);
+
+            return ResponseEntity.ok(new WrapperResponse<ItemDTO>(true, "", response));
+        } catch (Exception e) {
+            return ResponseEntity.ok((new WrapperResponse<ItemDTO>(false, e.getMessage())));
+        }
+    }
+
+    // Editar item.
+    @PutMapping(path="/{id}")
+    public ResponseEntity<WrapperResponse<ItemDTO>> editItem(@PathVariable("id") String idItem, @RequestHeader("Authorization") String token, @RequestBody ItemDTO itemDTO) {
+        try {
+            logger.info("ItemRest.editItem");
+
+            if(!securityService.isLogged(token)){
+                throw new Exception("No se encuentra logueado, token invalido.");
+            }
+
+            if(!securityService.perteneceItem(token, idItem)){
+                throw new Exception("Es obligatorio haber creado el Item para editarlo.");
+            }
+
+            ItemDTO response = itemService.editItem(idItem, itemDTO);
+
+            return ResponseEntity.ok(new WrapperResponse<ItemDTO>(true, "", response));
+        } catch (Exception e) {
+            return ResponseEntity.ok((new WrapperResponse<ItemDTO>(false, e.getMessage())));
+        }
+    }
+
+    // Borrar item.
+    @DeleteMapping(path="/{id}")
+    public ResponseEntity<WrapperResponse<String>> deleteItem(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
+        try {
+            logger.info("ItemRest.deleteItem");
+
+            if(!securityService.isLogged(token)){
+                throw new Exception("No se encuentra logueado, token invalido.");
+            }
+
+            if(!securityService.perteneceItem(token, id)){
+                throw new Exception("Es obligatorio haber creado el item para editarlo.");
+            }
+
+            itemService.deleteItem(token);
+
+            return ResponseEntity.ok(new WrapperResponse<String>(true, "Item eliminado correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.ok((new WrapperResponse<String>(false, e.getMessage())));
+        }
+    }
     
 }

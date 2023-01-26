@@ -1,6 +1,7 @@
 package com.tallerweb.apptallerwebjava.DAO;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -14,4 +15,5 @@ public interface GroupUserRepository extends MongoRepository<GroupUser, ObjectId
 
     @Query("{'integrantes.correo': ?0}")
     List<GroupUser> findByIntegrantesCorreo(String correo);
+    Optional<GroupUser> findById(String id);
 }

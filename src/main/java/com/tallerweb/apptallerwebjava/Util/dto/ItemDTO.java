@@ -7,7 +7,7 @@ public class ItemDTO {
     private String nombre;
     private String descripcion;
     private Double costo;
-    private boolean pago;
+    private Boolean pago;
     private User creadoPor;
 
     public ItemDTO() {
@@ -45,15 +45,15 @@ public class ItemDTO {
         this.costo = costo;
     }
 
-    public boolean isPago() {
+    public Boolean isPago() {
         return this.pago;
     }
 
-    public boolean getPago() {
+    public Boolean getPago() {
         return this.pago;
     }
 
-    public void setPago(boolean pago) {
+    public void setPago(Boolean pago) {
         this.pago = pago;
     }
 

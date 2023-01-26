@@ -83,7 +83,7 @@ public class UserRest {
                 throw new Exception("No tiene autorizacion para editar este usuario.");
             }
 
-            LoginResponseDTO response = userService.editUsuario(id, loginDTO);
+            LoginResponseDTO response = userService.editUsuario(token, loginDTO);
 
             return ResponseEntity.ok(new WrapperResponse<LoginResponseDTO>(true, "", response));
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class UserRest {
                 throw new Exception("No tiene autorizacion para borrar este usuario.");
             }
 
-            userService.deleteUsuario(id);
+            userService.deleteUsuario(token);
 
             return ResponseEntity.ok(new WrapperResponse<String>(true, "Usuario eliminado correctamente"));
         } catch (Exception e) {
