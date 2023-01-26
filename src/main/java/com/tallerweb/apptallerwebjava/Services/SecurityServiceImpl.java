@@ -12,9 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.tallerweb.apptallerwebjava.DAO.GroupUserRepository;
 import com.tallerweb.apptallerwebjava.DAO.UserRepository;
-import com.tallerweb.apptallerwebjava.Util.dto.GroupDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginResponseDTO;
 import com.tallerweb.apptallerwebjava.models.GroupUser;
@@ -42,9 +40,6 @@ public class SecurityServiceImpl {
 
 	@Autowired
 	private ItemServiceImpl itemService;
-
-	@Autowired
-	private GroupUserRepository groupUserRepository;
 
 	@Autowired
 	private GroupUserServiceImpl groupUserService;
@@ -165,7 +160,7 @@ public class SecurityServiceImpl {
 	public boolean isLogged(String token) throws Exception {
 
         try {
-            String uid = parseJWT(token);
+            parseJWT(token);
 			return true;
         } catch(Exception e){
             logger.error(e.getMessage());

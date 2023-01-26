@@ -23,9 +23,9 @@ public class SecurityRest {
 	public ResponseEntity<WrapperResponse<LoginResponseDTO>> login(@RequestBody LoginDTO loginDTO) {
 		try {
 			LoginResponseDTO response = this.securityService.login(loginDTO);
-			return ResponseEntity.ok(new WrapperResponse(true, "", response));
+			return ResponseEntity.ok(new WrapperResponse<LoginResponseDTO>(true, "", response));
 		} catch (Exception e) {
-			return ResponseEntity.ok(new WrapperResponse(false, e.getMessage()));
+			return ResponseEntity.ok(new WrapperResponse<LoginResponseDTO>(false, e.getMessage()));
 		}
 	}
 	
@@ -33,9 +33,9 @@ public class SecurityRest {
 	public WrapperResponse<LoginResponseDTO> tokenValidate(@RequestParam("token") String token) {
 		try {
 			LoginResponseDTO user = securityService.decriptToken(token);
-			return new WrapperResponse(true, "", user);
+			return new WrapperResponse<LoginResponseDTO>(true, "", user);
 		} catch (Exception e) {
-			return new WrapperResponse(false, e.getMessage());
+			return new WrapperResponse<LoginResponseDTO>(false, e.getMessage());
 		}
 		
 	}

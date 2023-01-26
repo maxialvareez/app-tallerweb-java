@@ -16,13 +16,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tallerweb.apptallerwebjava.DAO.ItemRepository;
 import com.tallerweb.apptallerwebjava.Services.ItemServiceImpl;
 import com.tallerweb.apptallerwebjava.Services.SecurityServiceImpl;
-import com.tallerweb.apptallerwebjava.Services.UserServiceImpl;
 import com.tallerweb.apptallerwebjava.Util.dto.ItemDTO;
-import com.tallerweb.apptallerwebjava.Util.dto.LoginDTO;
-import com.tallerweb.apptallerwebjava.Util.dto.LoginResponseDTO;
 import com.tallerweb.apptallerwebjava.Util.rest.WrapperResponse;
 
 @RestController
@@ -30,9 +26,6 @@ import com.tallerweb.apptallerwebjava.Util.rest.WrapperResponse;
 public class ItemRest {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemRest.class);
-
-    @Autowired
-	private UserServiceImpl userService;
 
     @Autowired
     private SecurityServiceImpl securityService;
@@ -58,10 +51,10 @@ public class ItemRest {
 
         ItemDTO response = itemService.addItem(itemDTO, token);
 
-        return ResponseEntity.ok(new WrapperResponse(true, "", response));
+        return ResponseEntity.ok(new WrapperResponse<ItemDTO>(true, "", response));
         
         } catch (Exception e) {
-            return ResponseEntity.ok(new WrapperResponse(false, e.getMessage()));
+            return ResponseEntity.ok(new WrapperResponse<ItemDTO>(false, e.getMessage()));
         }
 
     }

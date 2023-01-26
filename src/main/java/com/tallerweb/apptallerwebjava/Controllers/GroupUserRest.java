@@ -48,9 +48,9 @@ public class GroupUserRest {
 
             response = groupUserService.registrarGrupo(groupResponseDTO, token);
 
-			return ResponseEntity.ok(new WrapperResponse(true, "", response));
+			return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "", response));
 		} catch (Exception e) {
-			return ResponseEntity.ok(new WrapperResponse(false, e.getMessage()));
+			return ResponseEntity.ok(new WrapperResponse<GroupDTO>(false, e.getMessage()));
 		}
 	}
 
@@ -66,9 +66,9 @@ public class GroupUserRest {
 
 			List<GroupDTO> response = groupUserService.getGruposUsuario(token);
 
-			return ResponseEntity.ok(new WrapperResponse(true, "", response));
+			return ResponseEntity.ok(new WrapperResponse<List<GroupDTO>>(true, "", response));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse(false, e.getMessage())));
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse<List<GroupDTO>>(false, e.getMessage())));
 		}
 	}
 
@@ -88,9 +88,9 @@ public class GroupUserRest {
 
             GroupDTO response = groupUserService.getGrupo(id);
 
-            return ResponseEntity.ok(new WrapperResponse(true, "", response));
+            return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "", response));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse(false, e.getMessage())));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse<GroupDTO>(false, e.getMessage())));
         }
     }
 
@@ -110,9 +110,9 @@ public class GroupUserRest {
 
             GroupDTO response = groupUserService.addUserGroup(idGrupo, idUser.getId());
 
-            return ResponseEntity.ok(new WrapperResponse(true, "", response));
+            return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "", response));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse(false, e.getMessage())));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse<GroupDTO>(false, e.getMessage())));
         }
     }
 
@@ -132,9 +132,9 @@ public class GroupUserRest {
 
             GroupDTO response = groupUserService.editGroup(groupDTO, id);
 
-            return ResponseEntity.ok(new WrapperResponse(true, "", response));
+            return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "", response));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse(false, e.getMessage())));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse<GroupDTO>(false, e.getMessage())));
         }
     }
 
@@ -176,9 +176,9 @@ public class GroupUserRest {
 
             GroupDTO response = groupUserService.deleteUserGroup(idGrupo, idUser.getId());
 
-            return ResponseEntity.ok(new WrapperResponse(true, "", response));
+            return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "", response));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse(false, e.getMessage())));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse<GroupDTO>(false, e.getMessage())));
         }
     }
     

@@ -21,9 +21,6 @@ public class ItemServiceImpl {
     private static final Logger logger = LoggerFactory.getLogger(GroupUserServiceImpl.class);
 
     @Autowired
-    private SecurityServiceImpl securityService;
-
-    @Autowired
     private UserServiceImpl userService;
 
     @Autowired

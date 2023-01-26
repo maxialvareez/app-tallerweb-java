@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tallerweb.apptallerwebjava.Services.SecurityServiceImpl;
 import com.tallerweb.apptallerwebjava.Services.UserServiceImpl;
-import com.tallerweb.apptallerwebjava.Util.dto.GroupDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.LoginResponseDTO;
 import com.tallerweb.apptallerwebjava.Util.rest.WrapperResponse;
@@ -53,9 +51,9 @@ public class UserRest {
 
 			response = userService.registrarUsuario(loginDTO);
             
-			return ResponseEntity.ok(new WrapperResponse(true, "", response));
+			return ResponseEntity.ok(new WrapperResponse<LoginResponseDTO>(true, "", response));
 		} catch (Exception e) {
-			return ResponseEntity.ok(new WrapperResponse(false, e.getMessage()));
+			return ResponseEntity.ok(new WrapperResponse<LoginResponseDTO>(false, e.getMessage()));
 		}
 	}
 
