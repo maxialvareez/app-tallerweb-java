@@ -57,20 +57,6 @@ public class UserRest {
 		}
 	}
 
-    // Traer todos los usuarios (no se usa), faltaría filtrar por los true (no eliminados)
-    @GetMapping(path="/")
-	public ResponseEntity<WrapperResponse<List<LoginResponseDTO>>> getUsuarios(@RequestHeader("Authorization") String token) {
-		try {
-            logger.info("UserRest.getUsuarios");
-
-			List<LoginResponseDTO> response = userService.getAll();
-
-			return ResponseEntity.ok(new WrapperResponse<List<LoginResponseDTO>>(true, "", response));
-		} catch (Exception e) {
-			return ResponseEntity.ok((new WrapperResponse<List<LoginResponseDTO>>(false, e.getMessage())));
-		}
-	}
-
     // Editar usuario
     @PutMapping(path="/{id}")
     public ResponseEntity<WrapperResponse<LoginResponseDTO>> editUsuario(@PathVariable("id") String id, @RequestHeader("Authorization") String token,@RequestBody LoginDTO loginDTO) {
