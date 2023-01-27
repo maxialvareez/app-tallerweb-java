@@ -1,8 +1,8 @@
 package com.tallerweb.apptallerwebjava.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.tallerweb.apptallerwebjava.DAO.ItemRepository;
 import com.tallerweb.apptallerwebjava.Util.dto.ItemDTO;
+import com.tallerweb.apptallerwebjava.models.GroupUser;
 import com.tallerweb.apptallerwebjava.models.Item;
 import com.tallerweb.apptallerwebjava.models.User;
 
@@ -27,14 +28,21 @@ public class ItemServiceImpl {
     private ItemRepository itemRepository;
 
     @Autowired
+    private GroupUserServiceImpl groupUserService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
-    public ItemDTO addItem(ItemDTO itemDTO, String token) throws Exception {
+    public ItemDTO addItem(ItemDTO itemDTO, String token, String idGrupo) throws Exception {
 
         try { 
 
             Item item = new Item();
             User user = userService.getUser(token);
+
+            if((itemDTO.getNombre() == null) || (itemDTO.getDescripcion() == null) || (itemDTO.getCosto() == null)){
+                throw new Exception("Faltan datos para crear el item.");
+            }
 
             item.setNombre(itemDTO.getNombre());
             item.setDescripcion(itemDTO.getDescripcion());
@@ -42,6 +50,7 @@ public class ItemServiceImpl {
             item.setCreadoPor(user);
 
             itemRepository.save(item);
+            groupUserService.addItemGroup(item, idGrupo);
 
             return convertToDto(item);
 
@@ -52,7 +61,7 @@ public class ItemServiceImpl {
 
     }
     
-    public ItemDTO editItem(String idItem, ItemDTO itemDTO) throws Exception {
+    public ItemDTO editItem(ItemDTO itemDTO, String idItem, String idGrupo) throws Exception {
 
         try {
             ItemDTO response = new ItemDTO();
@@ -75,6 +84,9 @@ public class ItemServiceImpl {
             }
 
             itemRepository.save(item);
+            groupUserService.editItemGroup(item, idItem, idGrupo);
+
+
 
             response = convertToDto(item); 
 
@@ -100,6 +112,7 @@ public class ItemServiceImpl {
             return null;
 
         } catch(Exception e) {
+            logger.error(e.getMessage());
             return null;
         }
 
@@ -115,12 +128,13 @@ public class ItemServiceImpl {
         return null;
     }
 
-    public void deleteItem(String id) throws Exception {
+    public void deleteItem(String idItem, String idGrupo) throws Exception {
 
         try {
-            Item item = getItem(id);
+            Item item = getItem(idItem);
             item.setEstado(false);
             itemRepository.save(item);
+            groupUserService.deleteItemGroup(idItem, idGrupo);
 
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -129,9 +143,25 @@ public class ItemServiceImpl {
 
     }
 
-    public List<ItemDTO> getAll(){
+    public List<ItemDTO> getAllFromGroup(String id){
+        try {
         List<Item> lista = itemRepository.findAll();
-        return lista.stream().map(this::convertToDto).collect(Collectors.toList());
+        List<ItemDTO> listaDTO = new ArrayList<>();
+        GroupUser group = groupUserService.getGroup(id);
+
+        for(Item item: lista){
+            if(group.getItems().contains(item)){
+                listaDTO.add(convertToDto(item));
+            }
+        }
+
+        return listaDTO;
+
+        } catch(Exception e){
+            logger.error(e.getMessage());
+        }
+
+        return null;
     }
 
     private ItemDTO convertToDto(Item item) {

@@ -25,6 +25,9 @@ public class UserServiceImpl {
 
     @Autowired
     SecurityServiceImpl securityService;
+
+    @Autowired
+    GroupUserServiceImpl groupUserService;
     
     @Autowired
     private ModelMapper modelMapper;
@@ -78,6 +81,7 @@ public class UserServiceImpl {
             }
 
             userRepository.save(user);
+            groupUserService.editUserGroup(user, token);
 
             response = convertToDto(user); 
 
@@ -96,6 +100,7 @@ public class UserServiceImpl {
             User user = getUser(token);
             user.setEstado(false);
             userRepository.save(user);
+            groupUserService.deleteUserFromGroups(token);
 
         } catch (Exception e) {
             logger.error(e.getMessage());

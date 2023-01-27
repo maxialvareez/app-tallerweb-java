@@ -48,5 +48,15 @@ public class GroupUser {
             this.integrantes.remove(user);
         }       
     }
+
+    public void addItem(Item item){
+        this.items.add(item);        
+    }
+
+    public void deleteItem(Item item){
+        if(this.items.contains(item)){
+            this.items.remove(item);
+        }       
+    }
     
 }

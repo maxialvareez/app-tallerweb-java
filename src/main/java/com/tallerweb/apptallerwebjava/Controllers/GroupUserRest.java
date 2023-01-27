@@ -24,7 +24,7 @@ import com.tallerweb.apptallerwebjava.Util.dto.IdDTO;
 import com.tallerweb.apptallerwebjava.Util.rest.WrapperResponse;
 
 @RestController
-@RequestMapping("/api/groupuser")
+@RequestMapping("/api/groupusers")
 public class GroupUserRest {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupUserRest.class);
@@ -95,7 +95,7 @@ public class GroupUserRest {
     }
 
     // Agregar un usuario a un grupo.
-    @PutMapping(path="/user/{id}")
+    @PutMapping(path="/userAdd/{id}")
     public ResponseEntity<WrapperResponse<?>> agregarUsuarioGrupo(@PathVariable("id") String idGrupo, @RequestBody IdDTO idUser, @RequestHeader("Authorization") String token) {
         try {
             logger.info("GroupUserRest.agregarUsuarioGrupo");
@@ -161,7 +161,7 @@ public class GroupUserRest {
     }
 
     // Borrar un usuario a un grupo.
-    @PutMapping(path="/user/{id}")
+    @PutMapping(path="/userDelete/{id}")
     public ResponseEntity<WrapperResponse<?>> deleteUsuarioGrupo(@PathVariable("id") String idGrupo, @RequestBody IdDTO idUser, @RequestHeader("Authorization") String token) {
         try {
             logger.info("GroupUserRest.deleteUsuarioGrupo");

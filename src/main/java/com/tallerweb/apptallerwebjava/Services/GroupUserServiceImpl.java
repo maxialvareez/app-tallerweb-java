@@ -15,6 +15,7 @@ import com.tallerweb.apptallerwebjava.DAO.GroupUserRepository;
 import com.tallerweb.apptallerwebjava.DAO.UserRepository;
 import com.tallerweb.apptallerwebjava.Util.dto.GroupDTO;
 import com.tallerweb.apptallerwebjava.models.GroupUser;
+import com.tallerweb.apptallerwebjava.models.Item;
 import com.tallerweb.apptallerwebjava.models.User;
 
 @Service
@@ -27,6 +28,9 @@ public class GroupUserServiceImpl {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ItemServiceImpl itemService;
 
     @Autowired
     private GroupUserRepository groupUserRepository;
@@ -194,6 +198,98 @@ public class GroupUserServiceImpl {
         }
         
         return null;
+    }
+
+    public void deleteUserFromGroups(String token) throws Exception {
+        try {
+            User user = userService.getUser(token);
+            List<GroupUser> lista = groupUserRepository.findAll();
+            
+            for(GroupUser group: lista){
+                for(User userLoop: group.getIntegrantes()){
+                    if(userLoop.getId().equals(user.getId())){
+                        group.deleteIntegrante(userLoop);
+                        groupUserRepository.save(group);
+                        continue;
+                    }
+                }
+            }
+
+        } catch(Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    public void editUserGroup(User user, String token) throws Exception {
+        try {
+            List<GroupUser> lista = groupUserRepository.findAll();
+
+            for(GroupUser group: lista){
+                for(User userLoop: group.getIntegrantes()){
+                    if(userLoop.getId().equals(user.getId())){
+                        group.deleteIntegrante(userLoop);
+                        group.addIntegrante(user);
+                        groupUserRepository.save(group);
+                        continue;
+                    }
+                }
+                
+            }
+            
+            
+        } catch(Exception e){
+            throw new Exception("No se puede editar el usuario en dicho grupo.");
+        }
+        
+    }
+
+    public void addItemGroup(Item item, String idGrupo) throws Exception {
+        try {
+            GroupUser group = getGroup(idGrupo);
+            if(!group.getItems().contains(item)){
+                group.addItem(item);
+                groupUserRepository.save(group);
+            }
+        } catch(Exception e){
+            throw new Exception("No se puede agregar el item al grupo.");
+        }
+        
+    }
+
+    public void editItemGroup(Item item, String idItem, String idGrupo) throws Exception {
+        try {
+            Item itemEdit = itemService.getItem(idItem);
+            GroupUser group = getGroup(idGrupo);
+
+            for(Item itemLoop: group.getItems()){
+                if(itemLoop.getId().equals(itemEdit.getId())){
+                    group.deleteItem(itemLoop);
+                    group.addItem(itemEdit);
+                    groupUserRepository.save(group);
+                }
+                continue;
+            }
+
+        } catch(Exception e){
+            throw new Exception("No se puede agregar el item al grupo.");
+        }
+        
+    }
+
+    public void deleteItemGroup(String idItem, String idGrupo) throws Exception {
+        try {
+            GroupUser group = getGroup(idGrupo);
+            Item item = itemService.getItem(idItem);
+            for(Item itemLoop: group.getItems()){
+                if(itemLoop.getId().equals(item.getId())){
+                    group.deleteItem(itemLoop);
+                    groupUserRepository.save(group);
+                }
+            }
+        } catch(Exception e){
+            throw new Exception("No se puede agregar el item al grupo.");
+        }
+        
     }
 
     public List<GroupDTO> getAll(){
