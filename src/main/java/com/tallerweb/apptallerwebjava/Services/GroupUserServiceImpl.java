@@ -108,9 +108,9 @@ public class GroupUserServiceImpl {
         return null;
     }
 
-    public GroupDTO addUserGroup(String idGroup, String id) throws Exception {
+    public GroupDTO addUserGroup(String idGroup, String correo) throws Exception {
         try {
-            Optional<User> optUser = userRepository.findById(id);
+            Optional<User> optUser = userRepository.findByCorreo(correo);
             GroupUser group = getGroup(idGroup);
             
             if(optUser.isPresent()){
@@ -174,9 +174,9 @@ public class GroupUserServiceImpl {
 
     }
 
-    public GroupDTO deleteUserGroup(String idGroup, String id) throws Exception {
+    public GroupDTO deleteUserGroup(String idGroup, String correo) throws Exception {
         try {
-            Optional<User> optUser = userRepository.findById(id);
+            Optional<User> optUser = userRepository.findByCorreo(correo);
             GroupUser group = getGroup(idGroup);
             
             if(optUser.isPresent()){

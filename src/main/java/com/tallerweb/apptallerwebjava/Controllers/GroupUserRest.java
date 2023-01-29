@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tallerweb.apptallerwebjava.Services.GroupUserServiceImpl;
 import com.tallerweb.apptallerwebjava.Services.SecurityServiceImpl;
 import com.tallerweb.apptallerwebjava.Util.dto.GroupDTO;
-import com.tallerweb.apptallerwebjava.Util.dto.IdDTO;
 import com.tallerweb.apptallerwebjava.Util.rest.WrapperResponse;
 
 @RestController
@@ -55,7 +54,7 @@ public class GroupUserRest {
 	}
 
     // Traer todos los grupos a los que pertenece ese usuario.
-    @GetMapping(path="grupos/")
+    @GetMapping(path="/")
 	public ResponseEntity<WrapperResponse<?>> getGruposUsuario(@RequestHeader("Authorization") String token) {
 		try {
             logger.info("GroupUserRest.getGruposUsuario");
@@ -96,7 +95,7 @@ public class GroupUserRest {
 
     // Agregar un usuario a un grupo.
     @PutMapping(path="/userAdd/{id}")
-    public ResponseEntity<WrapperResponse<?>> agregarUsuarioGrupo(@PathVariable("id") String idGrupo, @RequestBody IdDTO idUser, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<WrapperResponse<?>> agregarUsuarioGrupo(@PathVariable("id") String idGrupo, @RequestBody CorreoDTO correo, @RequestHeader("Authorization") String token) {
         try {
             logger.info("GroupUserRest.agregarUsuarioGrupo");
 
@@ -108,7 +107,7 @@ public class GroupUserRest {
                 throw new Exception("No se puede agregar personas al grupo del que no sos admin.");
             }
 
-            GroupDTO response = groupUserService.addUserGroup(idGrupo, idUser.getId());
+            GroupDTO response = groupUserService.addUserGroup(idGrupo, correo.getCorreo());
 
             return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "", response));
         } catch (Exception e) {
@@ -162,7 +161,7 @@ public class GroupUserRest {
 
     // Borrar un usuario a un grupo.
     @PutMapping(path="/userDelete/{id}")
-    public ResponseEntity<WrapperResponse<?>> deleteUsuarioGrupo(@PathVariable("id") String idGrupo, @RequestBody IdDTO idUser, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<WrapperResponse<?>> deleteUsuarioGrupo(@PathVariable("id") String idGrupo, @RequestBody CorreoDTO correo, @RequestHeader("Authorization") String token) {
         try {
             logger.info("GroupUserRest.deleteUsuarioGrupo");
 
@@ -174,12 +173,30 @@ public class GroupUserRest {
                 throw new Exception("No se puede eliminar personas del grupo del que no sos admin.");
             }
 
-            GroupDTO response = groupUserService.deleteUserGroup(idGrupo, idUser.getId());
+            GroupDTO response = groupUserService.deleteUserGroup(idGrupo, correo.getCorreo());
 
             return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse<GroupDTO>(false, e.getMessage())));
         }
     }
+
+    public class CorreoDTO {
+        private String correo;
+
+        public CorreoDTO(){
+
+        }
+
+        public void setCorreo(String correo){
+            this.correo = correo;
+        }
+
+        public String getCorreo(){
+            return this.correo;
+        }
+    }
     
 }
+
+
