@@ -46,7 +46,7 @@ public class SecurityServiceImpl {
 
 	@Bean
 	public PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder(4);
 	}
 	
 	public LoginResponseDTO login(LoginDTO request) throws Exception {
