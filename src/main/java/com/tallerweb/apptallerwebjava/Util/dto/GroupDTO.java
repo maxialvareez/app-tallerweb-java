@@ -7,6 +7,7 @@ import com.tallerweb.apptallerwebjava.models.User;
 
 public class GroupDTO {
 
+    private String id;
     private String nombre;
     private String descripcion;
     private boolean estado;
@@ -24,6 +25,14 @@ public class GroupDTO {
         this.creadoPor = creadoPor;
         this.integrantes = integrantes;
         this.items = items;
+    }
+
+    public String getId(){
+        return id;
+    }
+
+    public void setId(String id){
+        this.id = id;
     }
 
     public String getNombre() {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tallerweb.apptallerwebjava.Services.ItemServiceImpl;
 import com.tallerweb.apptallerwebjava.Services.SecurityServiceImpl;
+import com.tallerweb.apptallerwebjava.Util.dto.IdDTO;
 import com.tallerweb.apptallerwebjava.Util.dto.ItemDTO;
 import com.tallerweb.apptallerwebjava.Util.rest.WrapperResponse;
 
@@ -144,24 +145,6 @@ public class ItemRest {
         } catch (Exception e) {
             return ResponseEntity.ok((new WrapperResponse<String>(false, e.getMessage())));
         }
-    }
-
-    public class IdDTO {
-
-        private String id;
-
-        public IdDTO(){
-            
-        }
-
-        public void setId(String id){
-            this.id = id;
-        }        
-
-        public String getId(){
-            return this.id;
-        }
-        
     }
     
 }

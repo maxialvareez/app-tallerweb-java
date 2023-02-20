@@ -4,6 +4,7 @@ import com.tallerweb.apptallerwebjava.models.User;
 
 public class ItemDTO {
 
+    private String id;
     private String nombre;
     private String descripcion;
     private Double costo;
@@ -19,6 +20,14 @@ public class ItemDTO {
         this.costo = costo;
         this.pago = pago;
         this.creadoPor = creadoPor;
+    }
+
+    public String getId(){
+        return this.id;
+    }
+
+    public void setId(String id){
+        this.id = id;
     }
     
     public String getNombre() {

@@ -76,6 +76,7 @@ public class SecurityServiceImpl {
 				}
 
 				String token = createJWT(user);
+				token = token.split(" ")[1];
 				
 				response = new LoginResponseDTO();
 				response.setId(user.getId().toHexString());

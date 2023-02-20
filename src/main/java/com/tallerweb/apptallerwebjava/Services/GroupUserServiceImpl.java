@@ -280,14 +280,19 @@ public class GroupUserServiceImpl {
         try {
             GroupUser group = getGroup(idGrupo);
             Item item = itemService.getItem(idItem);
+            Boolean borrar = false;
             for(Item itemLoop: group.getItems()){
                 if(itemLoop.getId().equals(item.getId())){
-                    group.deleteItem(itemLoop);
-                    groupUserRepository.save(group);
+                    borrar = true;
                 }
             }
+
+            if(borrar){
+                group.deleteItem(item);
+                groupUserRepository.save(group);
+            }
         } catch(Exception e){
-            throw new Exception("No se puede agregar el item al grupo.");
+            throw new Exception("No se puede eliminar el item del grupo.");
         }
         
     }

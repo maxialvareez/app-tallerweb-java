@@ -1,5 +1,7 @@
 package com.tallerweb.apptallerwebjava.models;
 
+import java.util.Objects;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -37,5 +39,22 @@ public class Item {
         this.estado = true;
         this.pago = false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Item)) {
+            return false;
+        }
+        Item item = (Item) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nombre, descripcion, costo, pago, estado, creadoPor);
+    }
+
 
 }
