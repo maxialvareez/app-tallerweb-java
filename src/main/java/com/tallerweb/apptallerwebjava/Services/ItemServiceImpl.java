@@ -3,6 +3,7 @@ package com.tallerweb.apptallerwebjava.Services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -145,17 +146,12 @@ public class ItemServiceImpl {
 
     public List<ItemDTO> getAllFromGroup(String id){
         try {
-        List<Item> lista = itemRepository.findAll();
-        List<ItemDTO> listaDTO = new ArrayList<>();
-        GroupUser group = groupUserService.getGroup(id);
+            List<ItemDTO> listaDTO = new ArrayList<>();
+            GroupUser group = groupUserService.getGroup(id);
 
-        for(Item item: lista){
-            if(group.getItems().contains(item)){
-                listaDTO.add(convertToDto(item));
-            }
-        }
+            listaDTO = group.getItems().stream().map(it -> convertToDto(it)).collect(Collectors.toList());
 
-        return listaDTO;
+            return listaDTO;
 
         } catch(Exception e){
             logger.error(e.getMessage());

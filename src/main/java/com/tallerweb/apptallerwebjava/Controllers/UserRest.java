@@ -39,8 +39,6 @@ public class UserRest {
             LoginResponseDTO response = new LoginResponseDTO();
             logger.info("UserRest.registrarUsuario");
 
-            // TODO Validar formato email
-
             boolean valido = userService.validarUsuario(loginDTO);
 
             if(!valido){

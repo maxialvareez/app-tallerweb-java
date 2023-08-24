@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,9 +47,11 @@ public class ItemRest {
             throw new Exception("No se encuentra logueado, token invalido.");
         }
 
+        /* Validacion de pertenece grupo. Se simplifica la aplicación.
         if(!securityService.perteneceGrupo(token, id)){
             throw new Exception("No se encuentra logueado, token invalido.");
         }
+        */
 
         ItemDTO response = itemService.addItem(itemDTO, token, id);
 
@@ -70,9 +73,11 @@ public class ItemRest {
                 throw new Exception("No se encuentra logueado, token invalido.");
             }
     
+            /* 
             if(!securityService.perteneceGrupo(token, id)){
                 throw new Exception("No puede ver los items de ese grupo porque no pertenece a el.");
             }
+            */ 
 
             List<ItemDTO> response = itemService.getAllFromGroup(id);
 
@@ -92,8 +97,6 @@ public class ItemRest {
             if(!securityService.isLogged(token)){
                 throw new Exception("No se encuentra logueado, token invalido.");
             }
-
-            // Validacion de grupo.
 
             ItemDTO response = itemService.traerItem(id);
 
@@ -135,10 +138,12 @@ public class ItemRest {
                 throw new Exception("No se encuentra logueado, token invalido.");
             }
 
+            /* 
             if(!securityService.perteneceItem(token, idItem.getId())){
                 throw new Exception("Es obligatorio haber creado el item para editarlo.");
             }
-
+            */
+            
             itemService.deleteItem(idItem.getId(), idGrupo);
 
             return ResponseEntity.ok(new WrapperResponse<String>(true, "Item eliminado correctamente"));
