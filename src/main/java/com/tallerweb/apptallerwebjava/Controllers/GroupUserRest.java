@@ -47,12 +47,13 @@ public class GroupUserRest {
 
             response = groupUserService.registrarGrupo(groupResponseDTO, token);
 
-			return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "", response));
+			return ResponseEntity.ok(new WrapperResponse<GroupDTO>(true, "Grupo creado", response));
 		} catch (Exception e) {
 			return ResponseEntity.ok(new WrapperResponse<GroupDTO>(false, e.getMessage()));
 		}
 	}
 
+    /*
     // Traer todos los grupos a los que pertenece ese usuario.
     @GetMapping(path="/")
 	public ResponseEntity<WrapperResponse<?>> getGruposUsuario(@RequestHeader("Authorization") String token) {
@@ -180,6 +181,7 @@ public class GroupUserRest {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((new WrapperResponse<GroupDTO>(false, e.getMessage())));
         }
     }
+     */
 
     public class CorreoDTO {
         private String correo;

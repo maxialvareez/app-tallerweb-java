@@ -40,6 +40,11 @@ public class ItemServiceImpl {
 
             Item item = new Item();
             User user = userService.getUser(token);
+            GroupUser grupo = groupUserService.getGroup(idGrupo);
+
+            if(grupo == null) {
+                throw new Exception("No existe el grupo al que se quiere agregar el item.");
+            }
 
             if((itemDTO.getNombre() == null) || (itemDTO.getDescripcion() == null) || (itemDTO.getCosto() == null)){
                 throw new Exception("Faltan datos para crear el item.");
@@ -51,6 +56,8 @@ public class ItemServiceImpl {
             item.setCreadoPor(user);
 
             itemRepository.save(item);
+            
+            grupo.addItem(item);
             groupUserService.addItemGroup(item, idGrupo);
 
             return convertToDto(item);
@@ -135,7 +142,7 @@ public class ItemServiceImpl {
             Item item = getItem(idItem);
             item.setEstado(false);
             itemRepository.save(item);
-            groupUserService.deleteItemGroup(idItem, idGrupo);
+            groupUserService.deleteItemGroup(item, idGrupo);
 
         } catch (Exception e) {
             logger.error(e.getMessage());

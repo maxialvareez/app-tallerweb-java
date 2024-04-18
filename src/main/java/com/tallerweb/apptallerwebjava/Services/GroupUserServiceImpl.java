@@ -44,10 +44,6 @@ public class GroupUserServiceImpl {
 
             User user = userService.getUser(token);
 
-            if(user == null){
-                throw new Exception("No hay usuario con ese token.");
-            }
-
             if(groupDTO.getNombre() == null || groupDTO.getDescripcion() == null) {
                 throw new Exception("Falta el nombre o la descripcion.");
             }
@@ -276,10 +272,9 @@ public class GroupUserServiceImpl {
         
     }
 
-    public void deleteItemGroup(String idItem, String idGrupo) throws Exception {
+    public void deleteItemGroup(Item item, String idGrupo) throws Exception {
         try {
             GroupUser group = getGroup(idGrupo);
-            Item item = itemService.getItem(idItem);
             Boolean borrar = false;
             for(Item itemLoop: group.getItems()){
                 if(itemLoop.getId().equals(item.getId())){

@@ -29,6 +29,7 @@ public class SecurityRest {
 		}
 	}
 	
+	/*
 	@GetMapping(path="token/validate")
 	public WrapperResponse<LoginResponseDTO> tokenValidate(@RequestParam("token") String token) {
 		try {
@@ -39,5 +40,6 @@ public class SecurityRest {
 		}
 		
 	}
+	*/
     
 }

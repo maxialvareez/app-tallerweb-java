@@ -29,13 +29,14 @@ public class UserRest {
     @Autowired
 	private UserServiceImpl userService;
 
-    @Autowired
-    private SecurityServiceImpl securityService;
+    //@Autowired
+    //private SecurityServiceImpl securityService;
 
     // Registrar usuario
     @PostMapping(path="/")
 	public ResponseEntity<WrapperResponse<LoginResponseDTO>> registrarUsuario(@RequestBody LoginDTO loginDTO) {
 		try {
+
             LoginResponseDTO response = new LoginResponseDTO();
             logger.info("UserRest.registrarUsuario");
 
@@ -47,13 +48,14 @@ public class UserRest {
 
 			response = userService.registrarUsuario(loginDTO);
             
-			return ResponseEntity.ok(new WrapperResponse<LoginResponseDTO>(true, "", response));
+			return ResponseEntity.ok(new WrapperResponse<LoginResponseDTO>(true, "Usuario creado", response));
 		} catch (Exception e) {
 			return ResponseEntity.ok(new WrapperResponse<LoginResponseDTO>(false, e.getMessage()));
 		}
 	}
 
     // Editar usuario
+    /*
     @PutMapping(path="/{id}")
     public ResponseEntity<WrapperResponse<LoginResponseDTO>> editUsuario(@PathVariable("id") String id, @RequestHeader("Authorization") String token,@RequestBody LoginDTO loginDTO) {
         try {
@@ -88,5 +90,6 @@ public class UserRest {
             return ResponseEntity.ok((new WrapperResponse<String>(false, e.getMessage())));
         }
     }
+    */
     
 }

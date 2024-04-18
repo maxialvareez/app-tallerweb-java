@@ -66,13 +66,15 @@ public class SecurityServiceImpl {
 
 				Optional<User> userOpt = userRepository.findByCorreo(correo);
 				if (!userOpt.isPresent()) {
-					throw new Exception("El usuario no existe.");
+					throw new Exception("Usuario / Password no son correctos - Correo equivocado");
 				}
+
+				// TODO: Chequear si esta activo.
 				
 				User user = userOpt.get();
 
 				if(!encoder().matches(request.getPassword(), user.getPassword())) {
-					throw new Exception("La contraseña es incorrecta.");
+					throw new Exception("Usuario / Password no son correctos - Contraseña equivocada.");
 				}
 
 				String token = createJWT(user);
