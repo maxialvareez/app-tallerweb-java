@@ -31,4 +31,8 @@ public class User {
     public User(){
         this.estado = true;
     }
+
+    public boolean getEstado() {
+        return this.estado;
+    }
 }

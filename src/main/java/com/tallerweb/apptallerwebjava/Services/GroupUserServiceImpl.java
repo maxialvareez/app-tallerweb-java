@@ -242,10 +242,8 @@ public class GroupUserServiceImpl {
     public void addItemGroup(Item item, String idGrupo) throws Exception {
         try {
             GroupUser group = getGroup(idGrupo);
-            if(!group.getItems().contains(item)){
-                group.addItem(item);
-                groupUserRepository.save(group);
-            }
+            group.addItem(item);
+            groupUserRepository.save(group);
         } catch(Exception e){
             throw new Exception("No se puede agregar el item al grupo.");
         }
@@ -279,6 +277,7 @@ public class GroupUserServiceImpl {
             for(Item itemLoop: group.getItems()){
                 if(itemLoop.getId().equals(item.getId())){
                     borrar = true;
+                    break;
                 }
             }
 

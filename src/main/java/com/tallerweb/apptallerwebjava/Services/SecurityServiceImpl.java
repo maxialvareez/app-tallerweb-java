@@ -68,10 +68,12 @@ public class SecurityServiceImpl {
 				if (!userOpt.isPresent()) {
 					throw new Exception("Usuario / Password no son correctos - Correo equivocado");
 				}
-
-				// TODO: Chequear si esta activo.
 				
 				User user = userOpt.get();
+
+				if (!user.getEstado()) {
+					throw new Exception("Usuario / Password no son correctos - Cuenta borrada.");
+				}
 
 				if(!encoder().matches(request.getPassword(), user.getPassword())) {
 					throw new Exception("Usuario / Password no son correctos - Contraseña equivocada.");
@@ -88,6 +90,7 @@ public class SecurityServiceImpl {
 				
 				logger.info(user.getCorreo() + " autenticado.");
 			}
+			
 			return response;
 
 		} catch (Exception e) {
